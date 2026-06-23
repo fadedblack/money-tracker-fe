@@ -1,5 +1,5 @@
-import { Link } from "expo-router";
-import { View, Text, StyleSheet } from "react-native";
+import {View, Text, StyleSheet, Button} from "react-native";
+import Transactions from "@/app/components/Transactions";
 
 const styles = StyleSheet.create({
   container: {
@@ -20,11 +20,8 @@ const styles = StyleSheet.create({
 
 const Index = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Home Screen</Text>
-      <Link href="/about" style={styles.button}>
-        Go to About
-      </Link>
+    <View>
+      <Transactions></Transactions>
     </View>
   );
 };
