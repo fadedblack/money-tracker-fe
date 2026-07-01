@@ -1,24 +1,63 @@
-import { StyleSheet, Text, View } from "react-native";
+import {Button, StyleSheet, Text, TextInput, View} from "react-native";
+import {useState} from "react";
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#25292e",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    color: "#fff",
-    fontSize: 18,
-  },
+    container: {
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        flexDirection: "row",
+    },
+    text: {
+        color: "#000000",
+        fontSize: 18,
+    },
 });
 
 const Add = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Add Screen</Text>
-    </View>
-  );
+    const [inputValue, setInputValue] = useState(0);
+    const [expenseType, setExpenseType] = useState("");
+
+    return (
+        <View>
+            <View style={styles.container}>
+                <Text style={styles.text}>Expense Type</Text>
+                <TextInput
+                    style={styles.text}
+                    placeholder={"Enter something..."}
+                    value={expenseType}
+                    onChangeText={(text) => setExpenseType(text)}
+                />
+            </View>
+            <View style={styles.container}>
+                <Text style={styles.text}>Expense Value</Text>
+                <TextInput
+                    style={styles.text}
+                    placeholder={"Enter something..."}
+                    value={inputValue.toString()}
+                    onChangeText={(text) => setInputValue(Number(text))}
+                />
+            </View>
+
+            <Button title={"Add Expense"}
+                    onPress={async () => {
+                        await fetch("http://10.0.2.2:8080/money-tracker/api/transactions", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                            type: "DEBIT",
+                            category: expenseType,
+                            amount: inputValue,
+                            notes: "string"
+                            }),
+                        });
+
+                        setInputValue(0);
+                        setExpenseType("");
+                    }}/>
+        </View>
+    );
 };
 
 export default Add;
