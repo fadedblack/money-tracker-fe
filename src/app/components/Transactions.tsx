@@ -1,15 +1,50 @@
-import {View, StyleSheet} from "react-native";
+import {FlatList, View, ActivityIndicator} from "react-native";
 import Transaction from "@/app/components/Transaction";
+import {useCallback, useEffect, useState} from "react";
+import {TransactionsDTO} from "@/app/types/types";
+import {useFocusEffect} from "expo-router";
+import {EXPO_BASE_URL} from "@/app/constants/constant";
 
 const Transactions = () => {
-    return (
-        <View>
-            <Transaction value = {20000} type = {"Home"}/>
-            <Transaction value = {5000} type = {"Rent"} />
-            <Transaction value = {100} type = {"Wifi"} />
-            <Transaction value = {354} type = {"Medicine"} />
-        </View>
+    const [transactions, setTransactions] = useState<TransactionsDTO | null>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useFocusEffect(
+        useCallback(() => {
+            const fetchTransactions = async () => {
+                try {
+                    const response = await fetch(EXPO_BASE_URL + "money-tracker/api/transactions");
+                    const data = await response.json();
+
+                    setTransactions(data);
+                } catch (error) {
+                    console.error("Failed to fetch transactions:", error);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            fetchTransactions();
+        },[])
     )
-}
+
+    if (isLoading) {
+        return <ActivityIndicator size="large" style={{ flex: 1, justifyContent: 'center' }} />;
+    }
+
+    console.log(transactions);
+
+    return (
+        <View style={{ flex: 1 }}>
+            <FlatList
+                data={transactions}
+                renderItem={({ item }) => (
+                    <Transaction value={item.amount} type={item.category} />
+                )}
+                keyExtractor={(item) => item.id.toString()}
+            />
+        </View>
+    );
+};
 
 export default Transactions;
