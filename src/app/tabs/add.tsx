@@ -1,5 +1,6 @@
 import {Button, StyleSheet, Text, TextInput, View} from "react-native";
 import {useState} from "react";
+import {EXPO_BASE_URL} from "@/app/constants/constant";
 
 const styles = StyleSheet.create({
     container: {
@@ -40,7 +41,7 @@ const Add = () => {
 
             <Button title={"Add Expense"}
                     onPress={async () => {
-                        await fetch("http://10.0.2.2:8080/money-tracker/api/transactions", {
+                        await fetch(EXPO_BASE_URL + "money-tracker/api/transactions", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",

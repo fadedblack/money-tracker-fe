@@ -3,6 +3,7 @@ import Transaction from "@/app/components/Transaction";
 import {useCallback, useEffect, useState} from "react";
 import {TransactionsDTO} from "@/app/types/types";
 import {useFocusEffect} from "expo-router";
+import {EXPO_BASE_URL} from "@/app/constants/constant";
 
 const Transactions = () => {
     const [transactions, setTransactions] = useState<TransactionsDTO | null>([]);
@@ -12,7 +13,7 @@ const Transactions = () => {
         useCallback(() => {
             const fetchTransactions = async () => {
                 try {
-                    const response = await fetch("http://10.0.2.2:8080/money-tracker/api/transactions");
+                    const response = await fetch(EXPO_BASE_URL + "money-tracker/api/transactions");
                     const data = await response.json();
 
                     setTransactions(data);
